@@ -1,0 +1,43 @@
+
+`timescale 1 ns/1 ns
+
+module fft_tb;
+    reg clk;
+    reg [2:0] sel;
+    wire [8:0] yr, yi;
+
+    china_fft uut (
+        .clk(clk),
+        .sel(sel),
+        .yr(yr),
+        .yi(yi)
+    );
+    
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk; 
+    end
+    
+    initial begin
+        $dumpfile("fft_tb.vcd");
+        $dumpvars(0, fft_tb);
+        
+        sel = 3'b000; #10;
+        sel = 3'b001; #10;
+        sel = 3'b010; #10;
+        sel = 3'b011; #10;
+        sel = 3'b100; #10;
+        sel = 3'b101; #10;
+        sel = 3'b110; #10;
+        sel = 3'b111; #10;
+        
+        $display("FFT Output Results");
+        repeat (8) begin
+            $display("sel=%d -> yr=%d, yi=%d", sel, yr, yi);
+            #10;
+            sel = sel + 1;
+        end
+        
+        $finish;
+    end
+endmodule
